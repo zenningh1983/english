@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>三隻小豬英文練習機</title>
+
+<style>
+body{
+    font-family:"Microsoft JhengHei",sans-serif;
+    background:#F4F2F0;
+    padding:40px;
+    display:flex;
+    justify-content:center;
+}
+
+.container{
+    max-width:800px;
+    width:90%;
+}
+
+/* 標題 */
+h1{
+    text-align:center;
+    font-size:32px;
+    color:#534F4A;
+    margin-bottom:6px;
+}
+
+/* Tabs */
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tabs button{
+    flex:1;
+    padding:10px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    background:#D6CBC1;
+    color:#555;
+    cursor:pointer;
+}
+.tabs button.active{
+    background:#C8BDB3;
+    font-weight:bold;
+}
+
+/* 主單字 */
+.word{
+    font-size:48px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+/*** 音節顯示 ***/
+.syllable{
+    margin-left:20px;
+    margin-bottom:8px;
+}
+
+/* 音節非母音（灰） */
+.syll-gray{
+    color:#9B9B9B;
+}
+
+/* 母音 highlight（莫蘭迪紅） */
+.syll-vowel{
+    color:#C27C88;
+    font-weight:bold;
+}
+
+/* 中文 */
+.mean{
+    margin-left:20px;
+    font-size:16px;
+    margin-bottom:8px;
+}
+
+/* 例句 */
+.example{
+    margin-left:20px;
+    font-size:18px;
+    margin-bottom:20px;
+}
+.example-word{
+    color:#C27C88;
+    font-weight:bold;
+}
+
+/* Buttons */
+button.action,button.next{
+    padding:10px 18px;
+    margin:4px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    color:white;
+    font-size:18px;
+}
+
+button.action{
+    background:#B8AFA5;
+}
+button.action:hover{
+    background:#A69D95;
+}
+
+button.next{
+    background:#9A8F88;
+}
+button.next:hover{
+    background:#8F857E;
+}
+
+/* 聽寫部分 */
+#dictInput{
+    width:100%;
+    font-size:22px;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #AAA;
+    margin-top:10px;
+}
+
+#done{
+    font-size:32px;
+    text-align:center;
+    color:#6A5F58;
+    display:none;
+    margin-top:20px;
+}
+
+#restartBtn{
+    display:none;
+    padding:12px 18px;
+    margin:20px auto;
+    border:none;
+    border-radius:10px;
+    background:#8A7F76;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
+#restartBtn:hover{
+    background:#7A7068;
+}
+
+/* 結果 */
+#summaryBlock, #wrongBlock{
+  display:none;
+  background:#E7E4E1;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:16px;
+  line-height:1.6;
+}
+
+.correct{ color:#3FA63F; font-weight:bold; }
+.wrong{ color:#D9534F; font-weight:bold; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>三隻小豬英文練習機</h1>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button id="tCard" class="active">單字卡</button>
+  <button id="tDict">聽寫</button>
+</div>
+
+<!-- 單字卡 -->
+<div id="cardSec">
+  <div id="cWord" class="word"></div>
+
+  <div id="cSyl" class="syllable"></div>
+  <div id="cMean" class="mean"></div>
+  <div id="cEx" class="example"></div>
+
+  <button class="action" onclick="speakWord()">點我聽單字</button>
+  <button class="action" onclick="speakEx()">點我聽例句</button>
+  <button class="next" onclick="nextCard()">下一個單字</button>
+</div>
+
+<!-- 聽寫 -->
+<div id="dictSec" style="display:none;">
+  <div id="dictTitle" style="font-size:18px;margin-bottom:10px;">
+    聽一聽，拼出單字，按下 enter 進入下一題
+  </div>
+
+  <button class="action" id="listenBtn" onclick="speakDict()">再聽一次</button>
+  <div id="hint" style="margin:8px 0;color:#555;"></div>
+
+  <input id="dictInput" placeholder="請輸入英文">
+
+  <div id="done">🎉 恭喜完成本次聽寫！</div>
+
+  <div id="summaryBlock"></div>
+  <div id="wrongBlock"></div>
+
+  <button id="restartBtn" onclick="restartDict()">再做一次</button>
+</div>
+
+
+<script>
+/* ------------------------------------------------
+   語音（女性美語, 0.75x）
+-------------------------------------------------- */
+let femaleVoice=null;
+function loadVoices(){
+    let list=speechSynthesis.getVoices();
+    femaleVoice =
+        list.find(v=>v.name.toLowerCase().includes("female")) ||
+        list.find(v=>v.name.includes("Google US English")) ||
+        list[0];
+}
+speechSynthesis.onvoiceschanged=loadVoices;
+loadVoices();
+
+/* ------------------------------------------------
+   單字資料（示範 3 字，你會放 40 字）
+-------------------------------------------------- */
+const wordList=[
+ {word:"farm", zh:"農場", syll:["farm"], example:`We visited a <span class='example-word'>farm</span> last weekend.`},
+ {word:"city", zh:"城市", syll:["cit","y"], example:`I live in a busy <span class='example-word'>city</span>.`},
+ {word:"ring", zh:"戒指", syll:["ring"], example:`She wore a shiny <span class='example-word'>ring</span> today.`}
+];
+
+/* ------------------------------------------------
+   小工具
+-------------------------------------------------- */
+function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+}
+
+/* ------------------------------------------------
+   音節渲染（灰字 + 母音紅）
+-------------------------------------------------- */
+function renderSyll(sArr){
+ const vowels="aeiou";
+ return sArr.map(s=>{
+   let out="";
+   for(let ch of s){
+     if(vowels.includes(ch)){
+       out+=`<span class="syll-vowel">${ch}</span>`;
+     }else{
+       out+=`<span class="syll-gray">${ch}</span>`;
+     }
+   }
+   return out;
+ }).join(" ");
+}
+
+/* ------------------------------------------------
+   主單字卡
+-------------------------------------------------- */
+let cardOrder=[...wordList];
+shuffle(cardOrder);
+let ci=0;
+
+function colorize(w){
+ let res="", v="aeiou";
+ for(let ch of w){
+   if(v.includes(ch)) res+=`<span style="color:#C27C88">${ch}</span>`;
+   else res+=`<span style="color:#4A708B">${ch}</span>`;
+ }
+ return res;
+}
+
+function loadCard(){
+ let o=cardOrder[ci];
+ cWord.innerHTML=colorize(o.word);
+ cSyl.innerHTML=renderSyll(o.syll);
+ cMean.innerHTML="中文："+o.zh;
+ cEx.innerHTML=o.example;
+}
+
+function speakWord(){
+ let u=new SpeechSynthesisUtterance(cardOrder[ci].word);
+ u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
+ speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function speakEx(){
+ let raw=cEx.innerText;
+ let u=new SpeechSynthesisUtterance(raw);
+ u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
+ speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function nextCard(){
+ ci++;
+ if(ci>=cardOrder.length){
+   shuffle(cardOrder);
+   ci=0;
+ }
+ loadCard();
+ speakWord();
+}
+
+/* ------------------------------------------------
+   聽寫
+-------------------------------------------------- */
+let dictOrder=[], di=0, playCount=0;
+let answers=[];
+
+function initDict(){
+ dictOrder=[...wordList];
+ shuffle(dictOrder);
+ di=0; playCount=0; answers=[];
+
+ dictTitle.style.display="block";
+ listenBtn.style.display="inline-block";
+ dictInput.style.display="block";
+ hint.style.display="block";
+ done.style.display="none";
+ restartBtn.style.display="none";
+ summaryBlock.style.display="none";
+ wrongBlock.style.display="none";
+
+ dictInput.value="";
+ hint.innerHTML="";
+}
+
+function speakDict(){
+ let u=new SpeechSynthesisUtterance(dictOrder[di].word);
+ u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
+ speechSynthesis.cancel(); speechSynthesis.speak(u);
+
+ playCount++;
+ if(playCount>=3){
+   hint.innerHTML="提示："+dictOrder[di].zh;
+ }
+}
+
+dictInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter") nextDict();
+});
+
+function nextDict(){
+ let user=dictInput.value.trim();
+ let correct=dictOrder[di].word;
+ answers.push({user,correct});
+
+ di++;
+ if(di>=dictOrder.length){
+   finishDict();
+   return;
+ }
+
+ playCount=0;
+ hint.innerHTML="";
+ dictInput.value="";
+ speakDict();
+}
+
+function finishDict(){
+ dictInput.style.display="none";
+ listenBtn.style.display="none";
+ hint.style.display="none";
+ dictTitle.style.display="none";
+
+ done.style.display="block";
+ restartBtn.style.display="block";
+
+ let total=answers.length;
+ let correctN=answers.filter(a=>a.user.toLowerCase()===a.correct).length;
+ let wrongN=total-correctN;
+
+ summaryBlock.innerHTML=
+   `共答 ${total} 題　`+
+   `答對：<span class='correct'>${correctN}</span> 題　`+
+   `答錯：<span class='wrong'>${wrongN}</span> 題`;
+
+ summaryBlock.style.display="block";
+
+ let wrongs=answers.filter(a=>a.user.toLowerCase()!==a.correct);
+ if(wrongs.length>0){
+   let html="";
+   wrongs.forEach(w=>{
+     html+=`<div><span class='wrong'>${w.user||"(空白)"}</span> ➜ 正確：${w.correct}</div>`;
+   });
+   wrongBlock.innerHTML=html;
+   wrongBlock.style.display="block";
+ }
+}
+
+function restartDict(){
+ initDict();
+ speakDict();
+}
+
+/* ------------------------------------------------
+   Tab 切換
+-------------------------------------------------- */
+tCard.onclick=function(){
+ tCard.classList.add("active");
+ tDict.classList.remove("active");
+ cardSec.style.display="block";
+ dictSec.style.display="none";
+ loadCard();
+}
+
+tDict.onclick=function(){
+ tDict.classList.add("active");
+ tCard.classList.remove("active");
+ cardSec.style.display="none";
+ dictSec.style.display="block";
+ initDict();
+ speakDict();
+}
+
+loadCard();
+</script>
+
+</div>
+</body>
+</html>
