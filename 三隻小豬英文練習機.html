@@ -7,158 +7,120 @@
 <style>
 body{
     font-family:"Microsoft JhengHei",sans-serif;
-    background:#F4F2F0;
+    background:#F5F3F1;
     padding:40px;
     display:flex;
     justify-content:center;
 }
-
-.container{
-    max-width:800px;
-    width:90%;
-}
+.container{ max-width:820px; width:90%; }
 
 /* 標題 */
 h1{
     text-align:center;
     font-size:32px;
-    color:#534F4A;
-    margin-bottom:6px;
+    color:#5B5753;
+    margin-bottom:4px;
+}
+
+/* 副標（版本） */
+#versionLabel{
+    text-align:center;
+    font-size:10px;
+    color:#7E7973;
+    margin-bottom:20px;
+}
+
+/* Level 選單 */
+#levelSelect{
+    display:block;
+    margin:0 auto 22px auto;
+    font-size:18px;
+    padding:8px 14px;
+    border-radius:10px;
+    border:1px solid #AAA;
+    background:#EFEDEB;
+    color:#4A4948;
 }
 
 /* Tabs */
 .tabs{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
+    display:flex; gap:10px; margin-bottom:20px;
 }
-
 .tabs button{
-    flex:1;
-    padding:10px;
-    font-size:18px;
-    border:none;
-    border-radius:12px;
-    background:#D6CBC1;
-    color:#555;
-    cursor:pointer;
+    flex:1; padding:10px; font-size:18px;
+    border:none; border-radius:12px;
+    background:#D4CBC3; color:#555; cursor:pointer;
+    transition:0.2s;
 }
+.tabs button:hover{ filter:brightness(0.93); }
 .tabs button.active{
-    background:#C8BDB3;
-    font-weight:bold;
+    background:#C8BEB6; font-weight:bold;
 }
 
-/* 主單字 */
+/* 單字 */
 .word{
-    font-size:48px;
-    font-weight:bold;
-    margin-bottom:8px;
+    font-size:48px; font-weight:bold;
+    margin-bottom:10px;
+    color:#4A4948;
 }
 
-/*** 音節顯示 ***/
-.syllable{
-    margin-left:20px;
-    margin-bottom:8px;
+/* 音節 */
+.syllable{ 
+    margin-left:20px; 
+    margin-bottom:10px; 
+    font-size:22px; 
 }
+.syll-gray{ color:#9B9B9B; }
+.syll-vowel{ color:#C27C88; font-weight:bold; }
 
-/* 音節非母音（灰） */
-.syll-gray{
-    color:#9B9B9B;
-}
-
-/* 母音 highlight（莫蘭迪紅） */
-.syll-vowel{
-    color:#C27C88;
-    font-weight:bold;
-}
-
-/* 中文 */
-.mean{
-    margin-left:20px;
-    font-size:16px;
-    margin-bottom:8px;
-}
-
-/* 例句 */
-.example{
-    margin-left:20px;
-    font-size:18px;
-    margin-bottom:20px;
-}
-.example-word{
-    color:#C27C88;
-    font-weight:bold;
-}
+/* 中文、例句 */
+.mean{ margin-left:20px; font-size:16px; margin-bottom:8px; color:#4A4948; }
+.example{ margin-left:20px; font-size:18px; margin-bottom:20px; color:#4A4948; }
+.example-word{ color:#C27C88; font-weight:bold; }
 
 /* Buttons */
 button.action,button.next{
     padding:10px 18px;
-    margin:4px;
+    margin:6px 6px 6px 0;
     border:none;
     border-radius:10px;
     cursor:pointer;
     color:white;
     font-size:18px;
+    transition:0.2s;
 }
+button.action{ background:#B8AFA5; }
+button.action:hover{ background:#A79F96; }
 
-button.action{
-    background:#B8AFA5;
-}
-button.action:hover{
-    background:#A69D95;
-}
+button.next{ background:#988F88; }
+button.next:hover{ background:#8B827C; }
 
-button.next{
-    background:#9A8F88;
-}
-button.next:hover{
-    background:#8F857E;
-}
-
-/* 聽寫部分 */
+/* 聽寫 */
 #dictInput{
-    width:100%;
-    font-size:22px;
-    padding:10px;
-    border-radius:10px;
+    width:100%; font-size:22px;
+    padding:10px; border-radius:10px;
     border:1px solid #AAA;
     margin-top:10px;
+    background:#FAF9F8;
 }
 
-#done{
-    font-size:32px;
-    text-align:center;
-    color:#6A5F58;
-    display:none;
-    margin-top:20px;
+#done{ 
+    font-size:32px; text-align:center; 
+    color:#6A5F58; display:none; margin-top:20px; 
 }
 
 #restartBtn{
-    display:none;
-    padding:12px 18px;
-    margin:20px auto;
-    border:none;
-    border-radius:10px;
-    background:#8A7F76;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
+    display:none; padding:12px 18px; margin:20px auto;
+    border:none; border-radius:10px;
+    background:#8A7F76; color:white; cursor:pointer; font-size:20px;
 }
-#restartBtn:hover{
-    background:#7A7068;
-}
+#restartBtn:hover{ background:#7A7068; }
 
-/* 結果 */
-#summaryBlock, #wrongBlock{
-  display:none;
-  background:#E7E4E1;
-  padding:12px;
-  border-radius:10px;
-  margin-top:10px;
-  font-size:16px;
-  line-height:1.6;
+#summaryBlock,#wrongBlock{
+    display:none; background:#ECE9E6;
+    padding:12px; border-radius:10px;
+    margin-top:10px; font-size:16px; line-height:1.6;
 }
-
 .correct{ color:#3FA63F; font-weight:bold; }
 .wrong{ color:#D9534F; font-weight:bold; }
 </style>
@@ -168,6 +130,14 @@ button.next:hover{
 <div class="container">
 
 <h1>三隻小豬英文練習機</h1>
+<div id="versionLabel"></div>
+
+<!-- Level 選擇 -->
+<select id="levelSelect">
+    <option value="MJ7">MJ7</option>
+    <option value="MJ8">MJ8</option>
+    <option value="MJ9">MJ9</option>
+</select>
 
 <!-- Tabs -->
 <div class="tabs">
@@ -178,7 +148,6 @@ button.next:hover{
 <!-- 單字卡 -->
 <div id="cardSec">
   <div id="cWord" class="word"></div>
-
   <div id="cSyl" class="syllable"></div>
   <div id="cMean" class="mean"></div>
   <div id="cEx" class="example"></div>
@@ -196,45 +165,120 @@ button.next:hover{
 
   <button class="action" id="listenBtn" onclick="speakDict()">再聽一次</button>
   <div id="hint" style="margin:8px 0;color:#555;"></div>
-
   <input id="dictInput" placeholder="請輸入英文">
 
   <div id="done">🎉 恭喜完成本次聽寫！</div>
-
   <div id="summaryBlock"></div>
   <div id="wrongBlock"></div>
 
   <button id="restartBtn" onclick="restartDict()">再做一次</button>
 </div>
 
+<!-- ====================== 字庫（整合 40 字 MJ7） ====================== -->
+<script id="wordData" type="application/json">
+{
+  "MJ7":[
+    {"word":"farm","syll":["farm"],"zh":"農場","example":"We visited a <span class='example-word'>farm</span> last weekend."},
+    {"word":"city","syll":["cit","y"],"zh":"城市","example":"I live in a busy <span class='example-word'>city</span>."},
+    {"word":"country","syll":["coun","try"],"zh":"鄉間","example":"My grandparents live in the <span class='example-word'>country</span>."},
+    {"word":"yard","syll":["yard"],"zh":"院子","example":"We played soccer in the <span class='example-word'>yard</span>."},
+    {"word":"hotel","syll":["ho","tel"],"zh":"飯店","example":"We stayed at a nice <span class='example-word'>hotel</span> during our trip."},
+    {"word":"popcorn","syll":["pop","corn"],"zh":"爆米花","example":"I like to eat <span class='example-word'>popcorn</span> at the movies."},
+    {"word":"bakery","syll":["bak","er","y"],"zh":"麵包店","example":"The <span class='example-word'>bakery</span> sells warm bread."},
+    {"word":"vest","syll":["vest"],"zh":"背心","example":"He is wearing a blue <span class='example-word'>vest</span>."},
+    {"word":"taxi","syll":["tax","i"],"zh":"計程車","example":"We took a <span class='example-word'>taxi</span> to the station."},
+    {"word":"sweater","syll":["sweat","er"],"zh":"毛衣","example":"My new <span class='example-word'>sweater</span> is very soft."},
 
-<script>
-/* ------------------------------------------------
-   語音（女性美語, 0.75x）
--------------------------------------------------- */
-let femaleVoice=null;
-function loadVoices(){
-    let list=speechSynthesis.getVoices();
-    femaleVoice =
-        list.find(v=>v.name.toLowerCase().includes("female")) ||
-        list.find(v=>v.name.includes("Google US English")) ||
-        list[0];
+    {"word":"ring","syll":["ring"],"zh":"戒指","example":"She wore a shiny <span class='example-word'>ring</span> today."},
+    {"word":"forest","syll":["for","est"],"zh":"森林","example":"We walked through the quiet <span class='example-word'>forest</span>."},
+    {"word":"motorcycle","syll":["mo","tor","cy","cle"],"zh":"機車","example":"He rode his <span class='example-word'>motorcycle</span> to school."},
+    {"word":"castle","syll":["cas","tle"],"zh":"城堡","example":"The <span class='example-word'>castle</span> looks beautiful."},
+    {"word":"classroom","syll":["class","room"],"zh":"教室","example":"Our <span class='example-word'>classroom</span> is very bright."},
+    {"word":"rose","syll":["rose"],"zh":"玫瑰","example":"She picked a red <span class='example-word'>rose</span>."},
+    {"word":"ship","syll":["ship"],"zh":"船","example":"The <span class='example-word'>ship</span> sailed across the sea."},
+    {"word":"island","syll":["is","land"],"zh":"島嶼","example":"We visited a small <span class='example-word'>island</span>."},
+    {"word":"surprised","syll":["sur","prised"],"zh":"驚訝","example":"He was <span class='example-word'>surprised</span> by the gift."},
+    {"word":"gold","syll":["gold"],"zh":"金子","example":"The ring is made of <span class='example-word'>gold</span>."},
+
+    {"word":"river","syll":["riv","er"],"zh":"河流","example":"We walked along the <span class='example-word'>river</span>."},
+    {"word":"present","syll":["pre","sent"],"zh":"禮物","example":"She opened her birthday <span class='example-word'>present</span>."},
+    {"word":"wallet","syll":["wal","let"],"zh":"錢包","example":"He lost his <span class='example-word'>wallet</span>."},
+    {"word":"bookstore","syll":["book","store"],"zh":"書店","example":"We went to the <span class='example-word'>bookstore</span>."},
+    {"word":"spicy","syll":["spi","cy"],"zh":"辣的","example":"This soup is very <span class='example-word'>spicy</span>."},
+    {"word":"envelope","syll":["en","ve","lope"],"zh":"信封","example":"Put the letter in the <span class='example-word'>envelope</span>."},
+    {"word":"police station","syll":["po","lice","sta","tion"],"zh":"警察局","example":"We saw the <span class='example-word'>police station</span> downtown."},
+    {"word":"night market","syll":["night","mar","ket"],"zh":"夜市","example":"We ate dinner at the <span class='example-word'>night market</span>."},
+    {"word":"gas station","syll":["gas","sta","tion"],"zh":"加油站","example":"Dad stopped at a <span class='example-word'>gas station</span>."},
+    {"word":"airplane","syll":["air","plane"],"zh":"飛機","example":"The <span class='example-word'>airplane</span> is taking off."},
+
+    {"word":"bottle","syll":["bot","tle"],"zh":"瓶子","example":"She drank from a water <span class='example-word'>bottle</span>."},
+    {"word":"angry","syll":["an","gry"],"zh":"生氣","example":"He was <span class='example-word'>angry</span> after the game."},
+    {"word":"glass","syll":["glass"],"zh":"玻璃杯","example":"The <span class='example-word'>glass</span> fell and broke."},
+    {"word":"tomato","syll":["to","ma","to"],"zh":"番茄","example":"I ate a fresh <span class='example-word'>tomato</span>."},
+    {"word":"worried","syll":["wor","ried"],"zh":"擔心","example":"She felt <span class='example-word'>worried</span> about the test."},
+    {"word":"wonderful","syll":["won","der","ful"],"zh":"美好的","example":"We had a <span class='example-word'>wonderful</span> day."},
+    {"word":"potato","syll":["po","ta","to"],"zh":"馬鈴薯","example":"He cooked a <span class='example-word'>potato</span>."},
+    {"word":"letter","syll":["let","ter"],"zh":"信件","example":"I wrote a <span class='example-word'>letter</span> to my friend."},
+    {"word":"hospital","syll":["hos","pi","tal"],"zh":"醫院","example":"She works at the <span class='example-word'>hospital</span>."},
+    {"word":"restaurant","syll":["res","tau","rant"],"zh":"餐廳","example":"We had lunch at a <span class='example-word'>restaurant</span>."}
+  ],
+  "MJ8":[],
+  "MJ9":[]
 }
-speechSynthesis.onvoiceschanged=loadVoices;
+</script>
+
+<!-- ====================== 主程式 JS ====================== -->
+<script>
+/* 版本 */
+(function(){
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,"0");
+    const d = String(now.getDate()).padStart(2,"0");
+    window.versionCode = `${y}${m}${d}01`;
+    versionLabel.textContent = "版本：" + window.versionCode;
+})();
+
+/* 字庫 */
+let allLevels = JSON.parse(document.getElementById("wordData").textContent);
+let currentLevel = "MJ7";
+let wordList = allLevels[currentLevel];
+
+/* ================== ★ Google US English 語音 ★ ================== */
+let femaleVoice = null;
+
+function loadVoices() {
+    const vs = speechSynthesis.getVoices();
+
+    // 🔥 1. 優先 Google US English
+    femaleVoice = vs.find(v =>
+        v.name.toLowerCase().includes("google") &&
+        v.lang === "en-US"
+    );
+
+    // 🔥 2. 找其他 Google 英文
+    if(!femaleVoice){
+        femaleVoice = vs.find(v =>
+            v.name.toLowerCase().includes("google") &&
+            v.lang.startsWith("en")
+        );
+    }
+
+    // 🔥 3. 找任何美國腔
+    if(!femaleVoice){
+        femaleVoice = vs.find(v => v.lang === "en-US");
+    }
+
+    // 🔥 4. 最後才找英文
+    if(!femaleVoice){
+        femaleVoice = vs.find(v => v.lang.startsWith("en"));
+    }
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
 loadVoices();
 
-/* ------------------------------------------------
-   單字資料（示範 3 字，你會放 40 字）
--------------------------------------------------- */
-const wordList=[
- {word:"farm", zh:"農場", syll:["farm"], example:`We visited a <span class='example-word'>farm</span> last weekend.`},
- {word:"city", zh:"城市", syll:["cit","y"], example:`I live in a busy <span class='example-word'>city</span>.`},
- {word:"ring", zh:"戒指", syll:["ring"], example:`She wore a shiny <span class='example-word'>ring</span> today.`}
-];
-
-/* ------------------------------------------------
-   小工具
--------------------------------------------------- */
+/* 工具 */
 function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
         const j=Math.floor(Math.random()*(i+1));
@@ -242,174 +286,180 @@ function shuffle(arr){
     }
 }
 
-/* ------------------------------------------------
-   音節渲染（灰字 + 母音紅）
--------------------------------------------------- */
 function renderSyll(sArr){
- const vowels="aeiou";
- return sArr.map(s=>{
-   let out="";
-   for(let ch of s){
-     if(vowels.includes(ch)){
-       out+=`<span class="syll-vowel">${ch}</span>`;
-     }else{
-       out+=`<span class="syll-gray">${ch}</span>`;
-     }
-   }
-   return out;
- }).join(" ");
+    const vowels="aeiou";
+    return sArr.map(s=>{
+        let out="";
+        for(let ch of s){
+            if(vowels.includes(ch)){
+                out+=`<span class="syll-vowel">${ch}</span>`;
+            }else{
+                out+=`<span class="syll-gray">${ch}</span>`;
+            }
+        }
+        return out;
+    }).join(" ");
 }
-
-/* ------------------------------------------------
-   主單字卡
--------------------------------------------------- */
-let cardOrder=[...wordList];
-shuffle(cardOrder);
-let ci=0;
 
 function colorize(w){
- let res="", v="aeiou";
- for(let ch of w){
-   if(v.includes(ch)) res+=`<span style="color:#C27C88">${ch}</span>`;
-   else res+=`<span style="color:#4A708B">${ch}</span>`;
- }
- return res;
+    const vowels="aeiou";
+    return w.split("").map(ch=>{
+        return vowels.includes(ch)
+        ? `<span style="color:#C27C88">${ch}</span>`
+        : `<span style="color:#4A708B">${ch}</span>`;
+    }).join("");
 }
 
+/* 單字卡 */
+let cardOrder=[];
+let ci=0;
+
 function loadCard(){
- let o=cardOrder[ci];
- cWord.innerHTML=colorize(o.word);
- cSyl.innerHTML=renderSyll(o.syll);
- cMean.innerHTML="中文："+o.zh;
- cEx.innerHTML=o.example;
+    const o=cardOrder[ci];
+    cWord.innerHTML = colorize(o.word);
+    cSyl.innerHTML = renderSyll(o.syll);
+    cMean.innerHTML = "中文：" + o.zh;
+    cEx.innerHTML = o.example;
 }
 
 function speakWord(){
- let u=new SpeechSynthesisUtterance(cardOrder[ci].word);
- u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
- speechSynthesis.cancel(); speechSynthesis.speak(u);
+    const u = new SpeechSynthesisUtterance(cardOrder[ci].word);
+    u.voice=femaleVoice; u.lang="en-US"; u.rate=0.75;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
 
 function speakEx(){
- let raw=cEx.innerText;
- let u=new SpeechSynthesisUtterance(raw);
- u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
- speechSynthesis.cancel(); speechSynthesis.speak(u);
+    const u = new SpeechSynthesisUtterance(cEx.innerText);
+    u.voice=femaleVoice; u.lang="en-US"; u.rate=0.75;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
 
 function nextCard(){
- ci++;
- if(ci>=cardOrder.length){
-   shuffle(cardOrder);
-   ci=0;
- }
- loadCard();
- speakWord();
+    ci++;
+    if(ci>=cardOrder.length){
+        shuffle(cardOrder);
+        ci=0;
+    }
+    loadCard();
+    speakWord();
 }
 
-/* ------------------------------------------------
-   聽寫
--------------------------------------------------- */
+/* 聽寫 */
 let dictOrder=[], di=0, playCount=0;
 let answers=[];
 
 function initDict(){
- dictOrder=[...wordList];
- shuffle(dictOrder);
- di=0; playCount=0; answers=[];
+    dictOrder=[...wordList];
+    shuffle(dictOrder);
+    di=0; playCount=0; answers=[];
 
- dictTitle.style.display="block";
- listenBtn.style.display="inline-block";
- dictInput.style.display="block";
- hint.style.display="block";
- done.style.display="none";
- restartBtn.style.display="none";
- summaryBlock.style.display="none";
- wrongBlock.style.display="none";
+    dictTitle.style.display="block";
+    listenBtn.style.display="inline-block";
+    dictInput.style.display="block";
+    hint.style.display="block";
+    done.style.display="none";
+    restartBtn.style.display="none";
+    summaryBlock.style.display="none";
+    wrongBlock.style.display="none";
 
- dictInput.value="";
- hint.innerHTML="";
+    dictInput.value="";
+    hint.innerHTML="";
 }
 
 function speakDict(){
- let u=new SpeechSynthesisUtterance(dictOrder[di].word);
- u.lang="en-US"; u.rate=0.75; u.voice=femaleVoice;
- speechSynthesis.cancel(); speechSynthesis.speak(u);
+    const u=new SpeechSynthesisUtterance(dictOrder[di].word);
+    u.voice=femaleVoice; u.lang="en-US"; u.rate=0.75;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
 
- playCount++;
- if(playCount>=3){
-   hint.innerHTML="提示："+dictOrder[di].zh;
- }
+    playCount++;
+    if(playCount>=3){
+        hint.innerHTML="提示：" + dictOrder[di].zh;
+    }
 }
 
 dictInput.addEventListener("keydown",e=>{
- if(e.key==="Enter") nextDict();
+    if(e.key==="Enter") nextDict();
 });
 
 function nextDict(){
- let user=dictInput.value.trim();
- let correct=dictOrder[di].word;
- answers.push({user,correct});
+    const user=dictInput.value.trim();
+    const correct=dictOrder[di].word;
 
- di++;
- if(di>=dictOrder.length){
-   finishDict();
-   return;
- }
+    answers.push({ user, correct });
 
- playCount=0;
- hint.innerHTML="";
- dictInput.value="";
- speakDict();
+    di++;
+    if(di>=dictOrder.length){
+        finishDict();
+        return;
+    }
+
+    playCount=0;
+    hint.innerHTML="";
+    dictInput.value="";
+    speakDict();
 }
 
 function finishDict(){
- dictInput.style.display="none";
- listenBtn.style.display="none";
- hint.style.display="none";
- dictTitle.style.display="none";
+    dictInput.style.display="none";
+    listenBtn.style.display="none";
+    hint.style.display="none";
+    dictTitle.style.display="none";
 
- done.style.display="block";
- restartBtn.style.display="block";
+    done.style.display="block";
+    restartBtn.style.display="block";
 
- let total=answers.length;
- let correctN=answers.filter(a=>a.user.toLowerCase()===a.correct).length;
- let wrongN=total-correctN;
+    const total = answers.length;
+    const correctN = answers.filter(a=>a.user.toLowerCase()===a.correct.toLowerCase()).length;
+    const wrongN = total - correctN;
 
- summaryBlock.innerHTML=
-   `共答 ${total} 題　`+
-   `答對：<span class='correct'>${correctN}</span> 題　`+
-   `答錯：<span class='wrong'>${wrongN}</span> 題`;
+    summaryBlock.innerHTML =
+       `共答 ${total} 題　`+
+       `答對：<span class='correct'>${correctN}</span> 題　`+
+       `答錯：<span class='wrong'>${wrongN}</span> 題`;
+    summaryBlock.style.display="block";
 
- summaryBlock.style.display="block";
-
- let wrongs=answers.filter(a=>a.user.toLowerCase()!==a.correct);
- if(wrongs.length>0){
-   let html="";
-   wrongs.forEach(w=>{
-     html+=`<div><span class='wrong'>${w.user||"(空白)"}</span> ➜ 正確：${w.correct}</div>`;
-   });
-   wrongBlock.innerHTML=html;
-   wrongBlock.style.display="block";
- }
+    const wrongs = answers.filter(a=>a.user.toLowerCase()!==a.correct.toLowerCase());
+    if(wrongs.length>0){
+        wrongBlock.innerHTML = wrongs.map(w=>
+            `<div><span class='wrong'>${w.user||"(空白)"}</span> ➜ 正確：${w.correct}</div>`
+        ).join("");
+        wrongBlock.style.display="block";
+    }
 }
 
 function restartDict(){
- initDict();
- speakDict();
+    initDict();
+    speakDict();
 }
 
-/* ------------------------------------------------
-   Tab 切換
--------------------------------------------------- */
+/* Level */
+levelSelect.onchange=function(){
+    currentLevel=this.value;
+    wordList = allLevels[currentLevel];
+
+    if(!wordList || wordList.length===0){
+        alert("此 Level 尚無字庫");
+        return;
+    }
+    initAll();
+};
+
+/* 初始化 */
+function initAll(){
+    cardOrder=[...wordList];
+    shuffle(cardOrder);
+    ci=0;
+    loadCard();
+    initDict();
+}
+
+/* Tab */
 tCard.onclick=function(){
  tCard.classList.add("active");
  tDict.classList.remove("active");
  cardSec.style.display="block";
  dictSec.style.display="none";
- loadCard();
 }
-
 tDict.onclick=function(){
  tDict.classList.add("active");
  tCard.classList.remove("active");
@@ -419,7 +469,7 @@ tDict.onclick=function(){
  speakDict();
 }
 
-loadCard();
+initAll();
 </script>
 
 </div>
