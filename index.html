@@ -561,7 +561,7 @@ export default function App() {
                 max="50"
                 className="w-full p-3 bg-gray-50 rounded-lg border border-gray-200 text-center text-lg font-bold"
                 value={quizConfig.count}
-                onChange={(e) => setQuizConfig({...quizConfig, count: e.target.value})}
+                onChange={(e) => setQuizConfig({...quizConfig, count: parseInt(e.target.value) || 10})}
               />
               <span className="text-gray-500 whitespace-nowrap">題</span>
             </div>
