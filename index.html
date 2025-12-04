@@ -22,11 +22,11 @@ const MOCK_DICTIONARY = {
 // 預設等級列表
 const DEFAULT_LEVELS = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5', 'Hard'];
 
-// 簡單的音節猜測邏輯
+// 簡單的音節猜測邏輯 (修正兼容性)
 const guessSyllables = (word) => {
-  return word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
-             .replace(/^y/, '')
-             .match(/[aeiouy]{1,2}/g)?.join('-') || word;
+  const clean = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '').replace(/^y/, '');
+  const matches = clean.match(/[aeiouy]{1,2}/g);
+  return matches ? matches.join('-') : word;
 };
 
 // -----------------------------------------------------------------------------
@@ -398,7 +398,6 @@ export default function App() {
             <input 
               type="file" 
               accept="image/*" 
-              capture="environment"
               onChange={handleImageScan}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
@@ -561,7 +560,7 @@ export default function App() {
                 min="1" 
                 max="50"
                 className="w-full p-3 bg-gray-50 rounded-lg border border-gray-200 text-center text-lg font-bold"
-                value={quizConfig.count}
+                value={String(quizConfig.count)}
                 onChange={(e) => setQuizConfig({...quizConfig, count: e.target.value})}
               />
               <span className="text-gray-500 whitespace-nowrap">題</span>
