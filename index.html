@@ -556,16 +556,29 @@ export default function App() {
             <label className="block text-gray-700 font-bold mb-2">題目數量</label>
             <div className="flex items-center space-x-4">
               <input 
-                type="number" 
+                type="text" 
+                inputMode="numeric"
+                pattern="[0-9]*"
                 min="1" 
                 max="50"
                 className="w-full p-3 bg-gray-50 rounded-lg border border-gray-200 text-center text-lg font-bold"
                 value={quizConfig.count}
-                onChange={(e) => setQuizConfig({...quizConfig, count: parseInt(e.target.value) || 10})}
+                onChange={(e) => {
+                   // 只允許輸入數字
+                   const val = e.target.value.replace(/[^0-9]/g, '');
+                   setQuizConfig({...quizConfig, count: val});
+                }}
+                onBlur={(e) => {
+                   // 離開時若是空的或超出範圍，給予預設值
+                   let val = parseInt(e.target.value);
+                   if (isNaN(val) || val < 1) val = 1;
+                   if (val > 50) val = 50;
+                   setQuizConfig({...quizConfig, count: val});
+                }}
               />
               <span className="text-gray-500 whitespace-nowrap">題</span>
             </div>
-            <p className="text-xs text-gray-400 mt-1">*如果單字不夠，會出全部</p>
+            <p className="text-xs text-gray-400 mt-1">*如果單字不夠，會出全部 (最多 50 題)</p>
           </div>
 
           <button 
